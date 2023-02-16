@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.mapper.HouseMapMapper">
+
+
+
+	<select id="getSido" resultType="SidoGugunDongCodeDto">
+		select left(sidoCode,2) sidoCode, sidoName
+		from sidocode
+		order by sidoCode
+	</select>
+	
+	<select id="getGugunInSido" parameterType="string" resultType="SidoGugunDongCodeDto">
+		select left(gugunCode,5) gugunCode, gugunName
+		from guguncode
+		where left(gugunCode,2) = #{sido}
+		order by gugunCode
+	</select>
+	
+	<select id="getDongInGugun" parameterType="string" resultType="SidoGugunDongCodeDto">
+        select distinct dongName, dongCode
+		from dongCode
+		where left(dongCode, 5) = #{gugun}
+        and dongName is not null
+		order by dongName
+	</select>
+	
+	<!-- houseDeal houseInfo dongcode 세개의 테이블을 Join하고, 마지막으로 dong으로 검색하여 리턴 HouseDealDto 리스트 찾기-->
+	<select id="getAptInDong" parameterType="string" resultType="HouseInfoDto">
+		select no,housedeal.aptCode,houseinfo.dongcode,houseinfo.dong,concat(dongcode.sidoName,' ',dongcode.gugunName,' ',dongcode.dongName)as addr,
+		lat,lng,str_to_date(concat(dealYear,'-',dealMonth,'-',dealDay),'%Y-%m-%d') as dealDate,
+		dealAmount,area,floor,buildYear,apartmentName as aptName
+		from housedeal join houseinfo
+		on housedeal.aptCode = houseinfo.aptCode
+		left outer join dongcode
+		on houseinfo.dongCode = dongcode.dongCode
+		where houseinfo.dongCode = #{dong}
+	</select>
+
+	<!-- 동 코드로 해당 동 위치 좌표 구하기 -->
+		<select id="getPointInDong" parameterType="string" resultType="PointDto">
+        select lng,lat
+        from houseinfo
+        where dongCode=#{dongCode}
+        limit 1
+	</select>
+</mapper>
+

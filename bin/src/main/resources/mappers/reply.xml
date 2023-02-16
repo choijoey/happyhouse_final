@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.mapper.ReplyMapper">
+
+	<!-- 게시글 전체 조회 -->
+	<select id="selectReply" parameterType="int" resultType="ReplyDto">
+        select userId, content, date,no
+        from reply
+        where boardNo = #{boardNo};
+	</select>
+
+	<!-- 게시글 등록 -->
+	<insert id="insertReply" parameterType="ReplyDto">
+		insert into reply(boardNo, content,userId) 
+        values (#{boardNo}, #{content},#{userId});
+	</insert>
+
+	<!-- 게시글 삭제 -->
+	<delete id="deleteReply" parameterType="int">
+		delete 
+		from reply 
+		where no = #{no}
+	</delete>
+
+</mapper>
+

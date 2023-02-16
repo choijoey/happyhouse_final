@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.mapper.LikeMapper">
+
+	<!-- 해당 유저가 좋아요 눌렀는지 조회 -->
+	<select id="chkLike" parameterType="LikeDto" resultType="int">
+        select count(concat(boardNo,"-",userId))
+        from `like`
+        where boardNo = #{boardNo}
+        and userId = #{userId}
+	</select>
+
+
+	<!-- 해당 보드의 좋아요 체크  -->
+	<select id="selectLike" parameterType="LikeDto" resultType="LikeDto">
+        select *
+        from `like`
+        where boardNo = #{boardNo}
+	</select>
+
+	<!-- 좋아요 등록 -->
+	<insert id="insertLike" parameterType="LikeDto">
+		insert into `like`(boardNo,userId) 
+        values (#{boardNo},#{userId});
+	</insert>
+
+	<!-- 좋아요 삭제 -->
+	<delete id="deleteLike" parameterType="LikeDto">
+		delete 
+		from `like` 
+        where boardNo = #{boardNo}
+        and userId = #{userId}
+	</delete>
+
+</mapper>
+
